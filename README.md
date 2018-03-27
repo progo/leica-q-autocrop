@@ -1,0 +1,1 @@
+# leica-q-autocrop
