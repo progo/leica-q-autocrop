@@ -5,18 +5,15 @@ or 50 mm equivalents according to EXIF tags.
 INSTALLATION
 * copy this file in $CONFIGDIR/lua/ where CONFIGDIR
    is your darktable configuration directory
-* add the following line in the file $CONFIGDIR/luarc
+* add the following line in the file $CONFIGDIR/luarc:
    require "autocrop"
 
-USAGE 
+USAGE
 * Prepare two styles, named "Leica Q: 35 mm" and "Leica Q: 50 mm".
   This script does the rest.
 
 ADDITIONAL SOFTWARE NEEDED FOR THIS SCRIPT
 * exiftool
-   
-This file is a derivative of `autostyle.lua' by Marc Cousin.
-https://github.com/darktable-org/lua-scripts/blob/master/contrib/autostyle.lua
 
 ]]
 
@@ -28,14 +25,11 @@ local autocrop_apply_one_image, autocrop_apply_one_image_event, autocrop_apply,e
 
 -- Receive the event triggered
 function autocrop_apply_one_image_event(event,image)
-  autocrop_apply_one_image(image)
+   autocrop_apply_one_image(image)
 end
 
 -- Apply the style to an image, if it matches the tag condition
 function autocrop_apply_one_image (image)
-   -- darktable.print("Importing one...")
-
-   -- First find the style
    local style_name
 
    -- Now we'll see if the image needs a crop
@@ -53,8 +47,6 @@ function autocrop_apply_one_image (image)
       return
    end
 
-   -- darktable.print("Style: " .. style_name)
-
    local styles = darktable.styles
    local style
 
@@ -70,11 +62,10 @@ function autocrop_apply_one_image (image)
    end
 
    darktable.styles.apply(style, image)
-
 end 
 
 
-function autocrop_apply( shortcut)
+function autocrop_apply(shortcut)
   local images = darktable.gui.action_images
   for _,image in pairs(images) do
     autocrop_apply_one_image(image)
@@ -113,8 +104,12 @@ function get_stdout(cmd)
 end
 
 -- Registering events
-darktable.register_event("shortcut", autocrop_apply,
+darktable.register_event("autocrop-q",
+                         "shortcut",
+                         autocrop_apply,
                          "Crop the photo according to the EXIF data.")
-darktable.register_event("post-import-image", autocrop_apply_one_image_event)
+darktable.register_event("autocrop-q",
+                         "post-import-image",
+                         autocrop_apply_one_image_event)
 
 
